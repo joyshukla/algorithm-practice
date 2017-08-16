@@ -4,9 +4,9 @@ enqueue the node s
 
 while(queue is not empty) 
 {
-	- s = dequeue the head of the queue
-	- mark s as visited
-	- find all neighbouring nodes to s
-	
-	- enqueue the neighbouring nodes
+	s = dequeue the head of the queue
+	s.visited = True
+	for all neighbours(v) of s:
+		if v is not visited:
+			enqueue(v)
 }
