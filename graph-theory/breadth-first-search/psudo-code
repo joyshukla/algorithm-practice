@@ -1,1 +1,12 @@
-<placeholder>
+
+start with node s
+enqueue the node s
+
+while(queue is not empty) 
+{
+	- s = dequeue the head of the queue
+	- mark s as visited
+	- find all neighbouring nodes to s
+	
+	- enqueue the neighbouring nodes
+}
