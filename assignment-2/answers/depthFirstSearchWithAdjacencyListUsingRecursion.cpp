@@ -18,7 +18,7 @@ struct Node {
     struct Node *next;
 };
 
-
+static int c_time=0;
 
 // C++ program to implement adjacency list for directed and undirected graphs
 
@@ -98,11 +98,13 @@ class Graph {
 };
  
 
-void depthFirstSearch(int id, Graph myGraph, int *visited) {    
+void depthFirstSearch(int id, Graph myGraph, int *visited, int *discoveryTime, int *finishTime) {    
         cout << "DFS of Node with id " << id << endl;
         visited[id] = 1;
 		// JS record discover time here
-		
+		cout << "d(" << id << ") = " << c_time << endl; 
+		discoveryTime[id] = c_time++;
+
         // check each vertex v adjacent to s in adjacency list
         ListNode *ptr = myGraph.getAdjListHead(id);
         while (ptr != NULL) {
@@ -113,13 +115,15 @@ void depthFirstSearch(int id, Graph myGraph, int *visited) {
             if  (visited[v_id] == 0) {
 
                 // perform a dfs of this vertex
-                 depthFirstSearch(v_id, myGraph, visited);
-           }
+                 depthFirstSearch(v_id, myGraph, visited, discoveryTime, finishTime);
+           	}
             else {
                 ptr = ptr->next;
-				// JS record finish time here
-		   }
+		   	}
        }
+	    cout << "f(" << id << ") = " << c_time << endl; 
+		finishTime[id] = c_time++;
+
        return;
 }
 
@@ -129,6 +133,8 @@ int main()
    
     int numVertices = 8;
     int *visited = new int[numVertices];
+    int *discoveryTime = new int[numVertices];
+    int *finishTime = new int[numVertices];
     for (int i = 0; i < numVertices; i++) {
         visited[i] = 0;
     }
@@ -146,6 +152,14 @@ int main()
     myGraph.print();
     
     int s_id = 1;
-    depthFirstSearch(s_id, myGraph, visited);
-    return 0;
+    depthFirstSearch(s_id, myGraph, visited, discoveryTime, finishTime);
+	cout << "n |\td\tf" << endl;
+	cout << "--------------------" << endl;
+	// print discover and finish time here
+	for (int j = 0; j < numVertices; j++) {
+		cout << j << " |\t" << discoveryTime[j] << "\t" << finishTime[j];	
+		cout << endl;
+	}
+
+	return 0;
 }

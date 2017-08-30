@@ -216,8 +216,6 @@ int main()
     myGraph.addNewEdge(5, 6);
     myGraph.print();
    
-   	//return 1;	
-
     Data *data1 = new Data();
     data1->id = 3;
     data1->distance = 0;

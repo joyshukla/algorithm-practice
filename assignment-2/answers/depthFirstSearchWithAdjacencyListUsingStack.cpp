@@ -10,8 +10,6 @@ using namespace std;
 // define Data according to requirements
 typedef struct data {
     int id;
-    int discoveryTime;
-    int finishingTime;
 } Data;
 
 // a node in the queue.
@@ -20,7 +18,7 @@ struct Node {
     struct Node *next;
 };
 
-
+static int c_time = 0;
 
 // C++ program to implement adjacency list for directed and undirected graphs
 
@@ -32,8 +30,6 @@ using namespace std;
 struct ListNode
 {
     int value;
-    int discoveryTime;
-    int finishingTime;
     struct ListNode* next;
     int visited; // used in BFS
 };
@@ -102,17 +98,17 @@ class Graph {
 };
  
 
-void depthFirstSearch(int id, Graph myGraph, int *visited) {    
+void depthFirstSearch(int id, Graph myGraph, int *visited, int *discoveryTime, int *finishTime) {    
         stack<int> s1;
         visited[id] = 1; // set vertex s to visited
         s1.push(id);
+		discoveryTime[id] = c_time++;
 
        while (!s1.empty()) {
            // check the id of first vertex s on stack
            int s_id = s1.top();
 
            cout << "DFS of Node with id " << s_id << endl;
-
            // find first unvisited vertex v adjacent to s in adjacency list
            ListNode *ptr = myGraph.getAdjListHead(s_id);
            int unVisitedNodeFound = 0; //  set this to 1 if an unvisited vertex v is found
@@ -129,7 +125,10 @@ void depthFirstSearch(int id, Graph myGraph, int *visited) {
                        s1.push(v_id);
                        unVisitedNodeFound = 1;  
 					   // JS record discover time here
-					   ptr->discoveryTime = 5;
+					   cout << "d(" << v_id << ") = " << c_time << endl; 
+					   discoveryTime[v_id] = c_time++;
+
+
                    }
                    else {
                        ptr = ptr->next;
@@ -142,11 +141,13 @@ void depthFirstSearch(int id, Graph myGraph, int *visited) {
            
                 if (unVisitedNodeFound == 0) // vertex at top of stack has no unvisited neighbors, pop this vertex
 				{
+					// JS record finish time here
+
+					cout << "f(" << s_id << ") = " << c_time << endl; 
+					finishTime[s_id] = c_time++;
+
 				  	s1.pop();
            		}
-			// JS record finish time here
-			ptr->finishingTime = 13;
-
 
        }
 }
@@ -157,6 +158,8 @@ int main()
    
     int numVertices = NUM_VERTICES;
     int *visited = new int[numVertices];
+	int *discoveryTime = new int[numVertices];
+    int *finishTime = new int[numVertices];
     for (int i = 0; i < numVertices; i++) {
         visited[i] = 0;
     }
@@ -174,6 +177,14 @@ int main()
     myGraph.print();
     
     int s_id = 1;
-    depthFirstSearch(s_id, myGraph, visited);
+    depthFirstSearch(s_id, myGraph, visited, discoveryTime, finishTime);
+	cout << "n |\td\tf" << endl;
+	cout << "--------------------" << endl;
+	// print discover and finish time here
+	for (int j = 0; j < numVertices; j++) {
+		cout << j << " |\t" << discoveryTime[j] << "\t" << finishTime[j];	
+		cout << endl;
+	}
+
     return 0;
 }
