@@ -138,6 +138,13 @@ int main()
     for (int i = 0; i < numVertices; i++) {
         visited[i] = 0;
     }
+    for (int i = 0; i < numVertices; i++) {
+        discoveryTime[i] = -1;
+    }
+    for (int i = 0; i < numVertices; i++) {
+        finishTime[i] = -1;
+    }
+
 
     Graph myGraph(numVertices, "undirected");
     myGraph.addNewEdge(0, 0);
