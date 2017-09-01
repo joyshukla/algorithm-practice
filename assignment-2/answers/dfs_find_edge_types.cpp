@@ -246,6 +246,9 @@ int main()
     myGraph.addNewEdge(3, 5);
     myGraph.addNewEdge(4, 5);
     myGraph.addNewEdge(5, 6);
+	// add edge to test back edge
+	myGraph.addNewEdge(5, 1);
+	myGraph.addNewEdge(7, 2);
     myGraph.print();
     
     int s_id = 1;
