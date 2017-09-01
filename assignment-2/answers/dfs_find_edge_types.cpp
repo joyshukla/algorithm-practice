@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <stack>
+#include <string>
 using namespace std;
 #define NUM_VERTICES 8
 
@@ -39,7 +40,18 @@ struct AdjList
 {
     struct ListNode *head;
 };
- 
+
+// edge 
+struct edge
+{
+	int fromNode;
+	int toNode;
+	string type;
+};	
+
+edge edgeList[100]; // CAUTION: max edges 100
+int numOfEdges = 0;
+
 // graph 
 class Graph {
     
@@ -65,7 +77,12 @@ class Graph {
             newNode1->value = v;
             newNode1->next = array[u].head;
             array[u].head = newNode1;
-            
+        	
+			edgeList[numOfEdges].fromNode = u;
+			edgeList[numOfEdges].toNode = v;
+			edgeList[numOfEdges].type = "";		
+			numOfEdges++;
+
             if (type == "undirected") {
                 // insert a new node with value u at index v of array
                 ListNode* newNode2 = new ListNode();
@@ -100,11 +117,31 @@ class Graph {
 
 void depthFirstSearch(int id, Graph myGraph, int *visited, int *discoveryTime, int *finishTime) {    
         stack<int> s1;
+		int allNodesVisited = 0;
         visited[id] = 1; // set vertex s to visited
         s1.push(id);
 		discoveryTime[id] = c_time++;
 
-       while (!s1.empty()) {
+       while (( !s1.empty() ) || ( allNodesVisited == 0 )) {
+
+		   if( s1.empty() )
+		   {
+				for (int i = 0; i < NUM_VERTICES ; i++) // change this later
+				{
+					if(visited[i] == 0)
+					{
+						visited[i]= 1;
+						s1.push(i);
+						discoveryTime[i] = c_time++;
+						break;
+					}
+				}
+				if( s1.empty() )
+				{
+					allNodesVisited = 1;
+					break;
+				}
+		   }
            // check the id of first vertex s on stack
            int s_id = s1.top();
 
@@ -148,8 +185,36 @@ void depthFirstSearch(int id, Graph myGraph, int *visited, int *discoveryTime, i
 
 				  	s1.pop();
            		}
-
        }
+}
+
+void DetermineEdgeType(int *discoveryTime, int *finishTime)
+{
+	for(int k = 0; k < numOfEdges ; k++)
+	{
+		if ( (discoveryTime[edgeList[k].fromNode] < discoveryTime[edgeList[k].toNode] ) &&
+				(discoveryTime[edgeList[k].toNode] < finishTime[edgeList[k].toNode]) &&
+				(finishTime[edgeList[k].toNode] < finishTime[edgeList[k].fromNode]) )
+		{
+			edgeList[k].type = "forward edge";
+		}
+		else if ( (discoveryTime[edgeList[k].toNode] < discoveryTime[edgeList[k].fromNode]) &&
+					(discoveryTime[edgeList[k].fromNode] < finishTime[edgeList[k].fromNode]) &&
+					(finishTime[edgeList[k].fromNode] < finishTime[edgeList[k].toNode]) )
+		{
+			edgeList[k].type = "back edge";
+		}
+		else if ( (discoveryTime[edgeList[k].toNode] < finishTime[edgeList[k].toNode]) &&
+					(finishTime[edgeList[k].toNode] < discoveryTime[edgeList[k].fromNode]) &&
+					(discoveryTime[edgeList[k].fromNode] < finishTime[edgeList[k].fromNode]) )
+		{
+			edgeList[k].type = "cross edge";
+		}
+		else
+		{
+			edgeList[k].type = "self edge";
+		}
+	}
 }
 
 
@@ -159,7 +224,7 @@ int main()
     int numVertices = NUM_VERTICES;
     int *visited = new int[numVertices];
 	int *discoveryTime = new int[numVertices];
-    int *finishTime = new int[numVertices];
+	int *finishTime = new int[numVertices];
     for (int i = 0; i < numVertices; i++) {
         visited[i] = 0;
     }
@@ -171,6 +236,7 @@ int main()
     }
 
     Graph myGraph(numVertices, "directed");
+	// CAUTION: max edges 100
     myGraph.addNewEdge(0, 0);
     myGraph.addNewEdge(1, 4);
     myGraph.addNewEdge(1, 2);
@@ -184,13 +250,26 @@ int main()
     
     int s_id = 1;
     depthFirstSearch(s_id, myGraph, visited, discoveryTime, finishTime);
-	cout << "n |\td\tf" << endl;
-	cout << "--------------------" << endl;
+	
 	// print discover and finish time here
+	cout << "Discovery and Finishing time of each node" << endl;
+	cout << "n |\td\tf" << endl;
+	cout << "------------------" << endl;
 	for (int j = 0; j < numVertices; j++) {
 		cout << j << " |\t" << discoveryTime[j] << "\t" << finishTime[j];	
 		cout << endl;
 	}
 
+	DetermineEdgeType(discoveryTime, finishTime);
+
+	cout << endl;
+	// print edges here
+	cout << "Type of Edges" << endl;
+	cout << "fr\t-->\tto\ttype" << endl;
+	cout << "-------------------------------" << endl;
+	for(int k = 0; k < numOfEdges ; k++)
+	{
+		cout << edgeList[k].fromNode << "\t-->\t" << edgeList[k].toNode << "\t" << edgeList[k].type << endl;
+	}
     return 0;
 }
