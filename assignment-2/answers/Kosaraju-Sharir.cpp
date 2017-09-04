@@ -14,9 +14,10 @@
 
 #include <iostream>
 #include <stack>
+#include "time.h"
 using namespace std;
 
-#define NUM_VERTICES 8
+#define NUM_VERTICES 9
 
 int numVertices = NUM_VERTICES;
 int *finishingTime; // time when a vertex has been explored fully
@@ -50,7 +51,8 @@ struct AdjList
 {
     struct ListNode *head;
 };
- 
+
+int** AdjMatrix;
 // graph 
 class Graph {
     
@@ -66,6 +68,15 @@ class Graph {
             array = new AdjList[numVertices];
             for (int i = 0; i < numVertices; i++)
                 array[i].head = NULL;
+
+			AdjMatrix = new int *[numVertices];		
+			for (int kk = 0; kk < numVertices; kk++)
+				AdjMatrix[kk] = new int[numVertices];
+
+			for (int ii = 0; ii < numVertices; ii++)
+				for (int jj = 0; jj < numVertices; jj++)
+					AdjMatrix[ii][jj] = 0;
+
         }
     
     
@@ -76,6 +87,7 @@ class Graph {
             newNode1->value = v;
             newNode1->next = array[u].head;
             array[u].head = newNode1;
+			AdjMatrix[u][v] = 1;
             
             if (type == "undirected") {
                 // insert a new node with value u at index v of array
@@ -83,6 +95,10 @@ class Graph {
                 newNode2->value = u;
                 newNode2->next = array[v].head;
                 array[v].head = newNode2;
+
+				AdjMatrix[u][v] = 1;
+				AdjMatrix[v][u] = 1;
+
             }
         }
     
@@ -90,6 +106,29 @@ class Graph {
        ListNode* getAdjListHead(int index) {
          return array[index].head;
        }
+
+	   int getAdjMatrixHead(int index) {
+	   	  for(int k=0; k <numberOfVertices ; k++)
+		  {	
+		     if (AdjMatrix[index][k] == 1)
+			 {
+				 return k;
+			 }
+		  }
+		  return (-1);
+	   }
+
+	   int getAdjMatrixNextNode(int index, int prevNode)
+	   {
+		   for(int k=prevNode+1; k < numberOfVertices; k++)
+		   {
+			  if (AdjMatrix[index][k] == 1)
+			  {
+				  return k;
+			  }
+		   }	   
+		   return (-1);
+	   }	   
        
         // print out the graph
         void print()
@@ -104,7 +143,25 @@ class Graph {
                 }
                 cout << endl;
             }
-                 
+     		cout << "Adjacancy Matrix"	<< endl;
+			cout << "    ";
+			for (int ii =0; ii < numberOfVertices; ii++) {
+				cout << ii;
+				cout << "  ";
+			}
+			cout << endl;
+			cout << "--------------------------";
+			cout << endl;
+			for (int ii = 0; ii < numberOfVertices; ii++) {
+				cout << ii;
+				cout << " | ";
+				for (int jj = 0; jj < numberOfVertices; jj++) {
+					cout << AdjMatrix[ii][jj];
+					cout << "  ";
+             	}
+				cout << endl;
+			}
+                
         }
 };
  
@@ -127,13 +184,14 @@ void depthFirstSearch(int s_id, Graph myGraph, int *visited, int discovery_time)
            cout << "DFS of Node with id " << s_id << endl;
 
            // find first unvisited vertex v adjacent to s in adjacency list
-           ListNode *ptr = myGraph.getAdjListHead(s_id);
+           //ListNode *ptr = myGraph.getAdjListHead(s_id);
+		   int v_id = myGraph.getAdjMatrixHead(s_id);
            int unVisitedNodeFound = 0; //  set this to 1 if an unvisited vertex v is found
            
            do {
                
-               if (ptr != NULL) {
-                   int v_id = ptr->value;
+               if (v_id != (-1)) {
+                   //int v_id = ptr->value;
                    if (visited[v_id] == 0) {
                        cout << "Adjacent vertex v of node with id " << s_id << " is " << v_id << " visited " << visited[v_id] <<  endl;
 
@@ -144,10 +202,11 @@ void depthFirstSearch(int s_id, Graph myGraph, int *visited, int discovery_time)
 
                        unVisitedNodeFound = 1;  
                    }
-                   else
-                       ptr = ptr->next;
+                   else {
+                       v_id = myGraph.getAdjMatrixNextNode(s_id, v_id);
+				   }
                }
-              } while ((ptr != NULL) && (unVisitedNodeFound == 0));
+              } while ((v_id != (-1)) && (unVisitedNodeFound == 0));
 
 
               
@@ -160,11 +219,23 @@ void depthFirstSearch(int s_id, Graph myGraph, int *visited, int discovery_time)
 
                     s1.pop();
                     s2.push(temp_id);
+					//s_id = temp_id;
             }
            
        }
        
 }
+
+void matrixTranspose(int **src, int **dst, const int N, const int M) {
+	for(int ii = 0; ii < N; ii++)
+	{
+		for(int jj = 0; jj < M; jj++)
+		{
+			dst[ii][jj] = src[jj][ii];
+		}
+	}
+}
+
 
 //returns the transpose of the Graph G
 Graph* transpose(Graph* G) {
@@ -189,7 +260,7 @@ Graph* transpose(Graph* G) {
 
 int main()
 {
-   
+	clock_t	startTime, endTime;
     int *visited = new int[numVertices];
     finishingTime = new int[numVertices];
     discoveryTime = new int[numVertices];
@@ -236,7 +307,9 @@ int main()
 
     
     myGraph.print();
-    
+   
+	startTime = clock();
+
     int s_id = 1;
     depthFirstSearch(s_id, myGraph, visited, 0);
 
@@ -252,8 +325,21 @@ int main()
         cout << "finishing time for vertex with id " << i << " is " << finishingTime[i] << endl;
     }
     
-    Graph* gt = transpose(&myGraph);
+//    Graph* gt = transpose(&myGraph);
 
+	int** AdjMatrixTr;
+	AdjMatrixTr = new int *[numVertices];
+	for (int kk = 0; kk < numVertices; kk++)
+		AdjMatrixTr[kk] = new int[numVertices];
+
+	for (int ii = 0; ii < numVertices; ii++)
+		for (int jj = 0; jj < numVertices; jj++)
+			AdjMatrixTr[ii][jj] = 0;
+
+	matrixTranspose(AdjMatrix, AdjMatrixTr, 9, 9);
+	AdjMatrix = AdjMatrixTr;
+
+	myGraph.print();
     
     for (int i = 0; i < numVertices; i++) {
         visited[i] = 0;
@@ -269,11 +355,15 @@ int main()
         if (!visited[s_id] ) {
             cout << "Finding a SCC for id " << s_id << endl;
             cout << "----------------------- " << endl;
-            depthFirstSearch(s_id, *gt, visited, 0);
+            depthFirstSearch(s_id, myGraph, visited, 0);
         }
     }
 
+	endTime = clock();
 
+	double totalTimeUsed = ((double)(endTime - startTime)) / (CLOCKS_PER_SEC);
+
+	cout << "CPUtime : " << totalTimeUsed;
     /* for (int i = 0; i < numVertices; i++) {
         cout << "discovery time for vertex with id " << i << " is " << discoveryTime[i] << endl;
         cout << "finishing time for vertex with id " << i << " is " << finishingTime[i] << endl;

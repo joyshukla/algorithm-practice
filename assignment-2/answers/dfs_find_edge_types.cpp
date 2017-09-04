@@ -196,23 +196,23 @@ void DetermineEdgeType(int *discoveryTime, int *finishTime)
 				(discoveryTime[edgeList[k].toNode] < finishTime[edgeList[k].toNode]) &&
 				(finishTime[edgeList[k].toNode] < finishTime[edgeList[k].fromNode]) )
 		{
-			edgeList[k].type = "forward edge";
+			edgeList[k].type = "forward/tree";
 		}
 		else if ( (discoveryTime[edgeList[k].toNode] < discoveryTime[edgeList[k].fromNode]) &&
 					(discoveryTime[edgeList[k].fromNode] < finishTime[edgeList[k].fromNode]) &&
 					(finishTime[edgeList[k].fromNode] < finishTime[edgeList[k].toNode]) )
 		{
-			edgeList[k].type = "back edge";
+			edgeList[k].type = "back";
 		}
 		else if ( (discoveryTime[edgeList[k].toNode] < finishTime[edgeList[k].toNode]) &&
 					(finishTime[edgeList[k].toNode] < discoveryTime[edgeList[k].fromNode]) &&
 					(discoveryTime[edgeList[k].fromNode] < finishTime[edgeList[k].fromNode]) )
 		{
-			edgeList[k].type = "cross edge";
+			edgeList[k].type = "cross";
 		}
 		else
 		{
-			edgeList[k].type = "self edge";
+			edgeList[k].type = "self";
 		}
 	}
 }
@@ -268,7 +268,7 @@ int main()
 	cout << endl;
 	// print edges here
 	cout << "Type of Edges" << endl;
-	cout << "fr\t-->\tto\ttype" << endl;
+	cout << "fr\t-->\tto\tedge-type" << endl;
 	cout << "-------------------------------" << endl;
 	for(int k = 0; k < numOfEdges ; k++)
 	{

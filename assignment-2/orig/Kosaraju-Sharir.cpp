@@ -16,7 +16,7 @@
 #include <stack>
 using namespace std;
 
-#define NUM_VERTICES 8
+#define NUM_VERTICES 9
 
 int numVertices = NUM_VERTICES;
 int *finishingTime; // time when a vertex has been explored fully
