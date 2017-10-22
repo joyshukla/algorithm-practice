@@ -160,6 +160,15 @@ int main()
     
     int s_id = 1;
     depthFirstSearch(s_id, myGraph, visited, discoveryTime, finishTime);
+
+    for (int i = 0; i < numVertices; i++) {
+        if (visited[i] == 0) {
+            cout << "Visiting unexplored vertex " << i << endl;
+           depthFirstSearch(i, myGraph, visited, discoveryTime, finishTime);
+        }
+    }
+
+
 	cout << "n |\td\tf" << endl;
 	cout << "--------------------" << endl;
 	// print discover and finish time here

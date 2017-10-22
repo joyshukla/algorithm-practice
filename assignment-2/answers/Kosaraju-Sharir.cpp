@@ -368,5 +368,7 @@ int main()
         cout << "discovery time for vertex with id " << i << " is " << discoveryTime[i] << endl;
         cout << "finishing time for vertex with id " << i << " is " << finishingTime[i] << endl;
     }*/
+
+	getchar();
     return 0;
 }

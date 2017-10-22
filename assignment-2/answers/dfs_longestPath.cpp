@@ -4,9 +4,10 @@
 
 #include <iostream>
 #include <stack>
-#include <string>
 using namespace std;
 #define NUM_VERTICES 8
+
+int *longestLeaf;
 
 // define Data according to requirements
 typedef struct data {
@@ -20,15 +21,14 @@ struct Node {
 };
 
 static int c_time = 0;
+static int c_dist = 0;
 
 // C++ program to implement adjacency list for directed and undirected graphs
 
 #include <iostream>
 #include <cstring>
 using namespace std;
-
-bool undirected = false;
-
+ 
 // adjacency list node
 struct ListNode
 {
@@ -42,18 +42,7 @@ struct AdjList
 {
     struct ListNode *head;
 };
-
-// edge 
-struct edge
-{
-	int fromNode;
-	int toNode;
-	string type;
-};	
-
-edge edgeList[100]; // CAUTION: max edges 100
-int numOfEdges = 0;
-
+ 
 // graph 
 class Graph {
     
@@ -79,14 +68,8 @@ class Graph {
             newNode1->value = v;
             newNode1->next = array[u].head;
             array[u].head = newNode1;
-        	
-			edgeList[numOfEdges].fromNode = u;
-			edgeList[numOfEdges].toNode = v;
-			edgeList[numOfEdges].type = "";		
-			numOfEdges++;
-
+            
             if (type == "undirected") {
-				undirected = true;
                 // insert a new node with value u at index v of array
                 ListNode* newNode2 = new ListNode();
                 newNode2->value = u;
@@ -120,34 +103,14 @@ class Graph {
 
 void depthFirstSearch(int id, Graph myGraph, int *visited, int *discoveryTime, int *finishTime) {    
         stack<int> s1;
-		int allNodesVisited = 0;
         visited[id] = 1; // set vertex s to visited
         s1.push(id);
 		discoveryTime[id] = c_time++;
 
-       while (( !s1.empty() ) || ( allNodesVisited == 0 )) {
-
-		   if( s1.empty() )
-		   {
-				for (int i = 0; i < NUM_VERTICES ; i++) // change this later
-				{
-					if(visited[i] == 0)
-					{
-						visited[i]= 1;
-						s1.push(i);
-						discoveryTime[i] = c_time++;
-						break;
-					}
-				}
-				if( s1.empty() )
-				{
-					allNodesVisited = 1;
-					break;
-				}
-		   }
+       while (!s1.empty()) {
            // check the id of first vertex s on stack
            int s_id = s1.top();
-
+		   c_dist++;
            cout << "DFS of Node with id " << s_id << endl;
            // find first unvisited vertex v adjacent to s in adjacency list
            ListNode *ptr = myGraph.getAdjListHead(s_id);
@@ -164,11 +127,12 @@ void depthFirstSearch(int id, Graph myGraph, int *visited, int *discoveryTime, i
                        visited[v_id] = 1;
                        s1.push(v_id);
                        unVisitedNodeFound = 1;  
-					   // JS record discover time here
 					   cout << "d(" << v_id << ") = " << c_time << endl; 
 					   discoveryTime[v_id] = c_time++;
 
-
+					   // we are going to exit the do..while loop since unVisitedNodeFound
+					   // this means that we are going to start DFS of the newly found node
+					   // hence distance will be increased here
                    }
                    else {
                        ptr = ptr->next;
@@ -181,54 +145,14 @@ void depthFirstSearch(int id, Graph myGraph, int *visited, int *discoveryTime, i
            
                 if (unVisitedNodeFound == 0) // vertex at top of stack has no unvisited neighbors, pop this vertex
 				{
-					// JS record finish time here
 
 					cout << "f(" << s_id << ") = " << c_time << endl; 
 					finishTime[s_id] = c_time++;
 
 				  	s1.pop();
            		}
-       }
-}
 
-void DetermineEdgeType(int *discoveryTime, int *finishTime)
-{
-	// if the graph is undirected every edge will be either forward or tree edge.
-	// it is obvious that the back edge becomes forward edge since there is no direction
-	// the cross edge will also become forward edge or tree edge since, we will traverse it in the same dfs instead of
-	// starting a new dfs from unvisited vertice.
-	//
-	// Hence for undirected graph we dont need to do this.
-	for(int k = 0; k < numOfEdges ; k++)
-	{
-		if(undirected)
-			edgeList[k].type = "forward/tree";
-		else
-		{
-			if ( (discoveryTime[edgeList[k].fromNode] < discoveryTime[edgeList[k].toNode] ) &&
-					(discoveryTime[edgeList[k].toNode] < finishTime[edgeList[k].toNode]) &&
-					(finishTime[edgeList[k].toNode] < finishTime[edgeList[k].fromNode]) )
-			{
-				edgeList[k].type = "forward/tree";
-			}
-			else if ( (discoveryTime[edgeList[k].toNode] < discoveryTime[edgeList[k].fromNode]) &&
-						(discoveryTime[edgeList[k].fromNode] < finishTime[edgeList[k].fromNode]) &&
-						(finishTime[edgeList[k].fromNode] < finishTime[edgeList[k].toNode]) )
-			{
-				edgeList[k].type = "back";
-			}
-			else if ( (discoveryTime[edgeList[k].toNode] < finishTime[edgeList[k].toNode]) &&
-						(finishTime[edgeList[k].toNode] < discoveryTime[edgeList[k].fromNode]) &&
-						(discoveryTime[edgeList[k].fromNode] < finishTime[edgeList[k].fromNode]) )
-			{
-				edgeList[k].type = "cross";
-			}
-			else
-			{
-				edgeList[k].type = "self";
-			}
-		}
-	}
+       }
 }
 
 
@@ -238,7 +162,10 @@ int main()
     int numVertices = NUM_VERTICES;
     int *visited = new int[numVertices];
 	int *discoveryTime = new int[numVertices];
-	int *finishTime = new int[numVertices];
+    int *finishTime = new int[numVertices];
+	
+	longestLeaf = new int[numVertices];
+
     for (int i = 0; i < numVertices; i++) {
         visited[i] = 0;
     }
@@ -249,60 +176,37 @@ int main()
         finishTime[i] = -1;
     }
 
-    Graph myGraph(numVertices, "directed");
-	// CAUTION: max edges 100
-    /*
-	myGraph.addNewEdge(0, 0);
-    myGraph.addNewEdge(1, 4);
-    myGraph.addNewEdge(1, 2);
-    myGraph.addNewEdge(2, 7);
-    myGraph.addNewEdge(2, 4);
-    myGraph.addNewEdge(3, 4);
-    myGraph.addNewEdge(3, 5);
-    myGraph.addNewEdge(4, 5);
-    myGraph.addNewEdge(5, 6);
-	// add edge to test back edge
-	myGraph.addNewEdge(5, 1);
-	myGraph.addNewEdge(7, 2);
-	*/
-	myGraph.addNewEdge(0, 0);
-	myGraph.addNewEdge(0, 1);
-    myGraph.addNewEdge(0, 2);
-    myGraph.addNewEdge(1, 2);
-    myGraph.addNewEdge(2, 3);
-    myGraph.addNewEdge(3, 1);
-    myGraph.addNewEdge(4, 2);
-    myGraph.addNewEdge(5, 3);
-    myGraph.addNewEdge(5, 4);
-    myGraph.addNewEdge(5, 6);
-    myGraph.addNewEdge(5, 7);
-    myGraph.addNewEdge(7, 6);
 
-
-	myGraph.print();
+    Graph myGraph(numVertices, "undirected");
+	myGraph.addNewEdge(0, 0);
+	myGraph.addNewEdge(1, 2);
+	myGraph.addNewEdge(1, 4);
+	myGraph.addNewEdge(2, 4);
+	myGraph.addNewEdge(2, 7);
+	myGraph.addNewEdge(3, 4);
+	myGraph.addNewEdge(3, 5);
+	myGraph.addNewEdge(4, 5);
+	myGraph.addNewEdge(5, 6);
+    myGraph.print();
     
     int s_id = 1;
     depthFirstSearch(s_id, myGraph, visited, discoveryTime, finishTime);
 	
-	// print discover and finish time here
-	cout << "Discovery and Finishing time of each node" << endl;
+	for (int i = 0; i < numVertices; i++) {
+        if (visited[i] == 0) {
+            cout << "Visiting unexplored vertex " << i << endl;
+           depthFirstSearch(i, myGraph, visited, discoveryTime, finishTime);
+        }
+    }
+	
 	cout << "n |\td\tf" << endl;
-	cout << "------------------" << endl;
+	cout << "--------------------" << endl;
+	// print discover and finish time here
 	for (int j = 0; j < numVertices; j++) {
 		cout << j << " |\t" << discoveryTime[j] << "\t" << finishTime[j];	
 		cout << endl;
 	}
 
-	DetermineEdgeType(discoveryTime, finishTime);
-
-	cout << endl;
-	// print edges here
-	cout << "Type of Edges" << endl;
-	cout << "fr\t-->\tto\tedge-type" << endl;
-	cout << "-------------------------------" << endl;
-	for(int k = 0; k < numOfEdges ; k++)
-	{
-		cout << edgeList[k].fromNode << "\t-->\t" << edgeList[k].toNode << "\t" << edgeList[k].type << endl;
-	}
+	getchar();
     return 0;
 }

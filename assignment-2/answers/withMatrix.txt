@@ -1,0 +1,131 @@
+Displaying adjacency list of graph 
+| 0 |1,4,
+| 1 |4,2,
+| 2 |2,5,
+| 3 |1,6,
+| 4 |3,
+| 5 |7,
+| 6 |4,
+| 7 |8,
+| 8 |5,
+Adjacancy Matrix
+    0  1  2  3  4  5  6  7  8  
+--------------------------
+0 | 0  1  0  0  1  0  0  0  0  
+1 | 0  0  1  0  1  0  0  0  0  
+2 | 0  0  1  0  0  1  0  0  0  
+3 | 0  1  0  0  0  0  1  0  0  
+4 | 0  0  0  1  0  0  0  0  0  
+5 | 0  0  0  0  0  0  0  1  0  
+6 | 0  0  0  0  1  0  0  0  0  
+7 | 0  0  0  0  0  0  0  0  1  
+8 | 0  0  0  0  0  1  0  0  0  
+DFS of Node with id 1
+Adjacent vertex v of node with id 1 is 2 visited 0
+DFS of Node with id 2
+Adjacent vertex v of node with id 2 is 5 visited 0
+DFS of Node with id 5
+Adjacent vertex v of node with id 5 is 7 visited 0
+DFS of Node with id 7
+Adjacent vertex v of node with id 7 is 8 visited 0
+DFS of Node with id 8
+pop node with id 8 finishing time 5
+DFS of Node with id 7
+pop node with id 7 finishing time 6
+DFS of Node with id 5
+pop node with id 5 finishing time 7
+DFS of Node with id 2
+pop node with id 2 finishing time 8
+DFS of Node with id 1
+Adjacent vertex v of node with id 1 is 4 visited 0
+DFS of Node with id 4
+Adjacent vertex v of node with id 4 is 3 visited 0
+DFS of Node with id 3
+Adjacent vertex v of node with id 3 is 6 visited 0
+DFS of Node with id 6
+pop node with id 6 finishing time 12
+DFS of Node with id 3
+pop node with id 3 finishing time 13
+DFS of Node with id 4
+pop node with id 4 finishing time 14
+DFS of Node with id 1
+pop node with id 1 finishing time 15
+Visiting unexplored vertex 0
+DFS of Node with id 0
+pop node with id 0 finishing time 1
+discovery time for vertex with id 0 is 0
+finishing time for vertex with id 0 is 1
+discovery time for vertex with id 1 is 0
+finishing time for vertex with id 1 is 15
+discovery time for vertex with id 2 is 1
+finishing time for vertex with id 2 is 8
+discovery time for vertex with id 3 is 10
+finishing time for vertex with id 3 is 13
+discovery time for vertex with id 4 is 9
+finishing time for vertex with id 4 is 14
+discovery time for vertex with id 5 is 2
+finishing time for vertex with id 5 is 7
+discovery time for vertex with id 6 is 11
+finishing time for vertex with id 6 is 12
+discovery time for vertex with id 7 is 3
+finishing time for vertex with id 7 is 6
+discovery time for vertex with id 8 is 4
+finishing time for vertex with id 8 is 5
+Displaying adjacency list of graph 
+| 0 |1,4,
+| 1 |4,2,
+| 2 |2,5,
+| 3 |1,6,
+| 4 |3,
+| 5 |7,
+| 6 |4,
+| 7 |8,
+| 8 |5,
+Adjacancy Matrix
+    0  1  2  3  4  5  6  7  8  
+--------------------------
+0 | 0  0  0  0  0  0  0  0  0  
+1 | 1  0  0  1  0  0  0  0  0  
+2 | 0  1  1  0  0  0  0  0  0  
+3 | 0  0  0  0  1  0  0  0  0  
+4 | 1  1  0  0  0  0  1  0  0  
+5 | 0  0  1  0  0  0  0  0  1  
+6 | 0  0  0  1  0  0  0  0  0  
+7 | 0  0  0  0  0  1  0  0  0  
+8 | 0  0  0  0  0  0  0  1  0  
+Finding a SCC for id 0
+----------------------- 
+DFS of Node with id 0
+pop node with id 0 finishing time 1
+Finding a SCC for id 1
+----------------------- 
+DFS of Node with id 1
+Adjacent vertex v of node with id 1 is 3 visited 0
+DFS of Node with id 3
+Adjacent vertex v of node with id 3 is 4 visited 0
+DFS of Node with id 4
+Adjacent vertex v of node with id 4 is 6 visited 0
+DFS of Node with id 6
+pop node with id 6 finishing time 4
+DFS of Node with id 4
+pop node with id 4 finishing time 5
+DFS of Node with id 3
+pop node with id 3 finishing time 6
+DFS of Node with id 1
+pop node with id 1 finishing time 7
+Finding a SCC for id 2
+----------------------- 
+DFS of Node with id 2
+pop node with id 2 finishing time 1
+Finding a SCC for id 5
+----------------------- 
+DFS of Node with id 5
+Adjacent vertex v of node with id 5 is 8 visited 0
+DFS of Node with id 8
+Adjacent vertex v of node with id 8 is 7 visited 0
+DFS of Node with id 7
+pop node with id 7 finishing time 3
+DFS of Node with id 8
+pop node with id 8 finishing time 4
+DFS of Node with id 5
+pop node with id 5 finishing time 5

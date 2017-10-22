@@ -1,0 +1,16 @@
+
+
+listdelete(value)
+{
+	x = listSearch(value)
+	if x->prev = NULL
+		head = x->next
+		x->next->prev = NULL
+	elseif x->next = NULL
+		x->prev->next = NULL
+	else
+		x->next->prev = x->prev
+		x->prev->next = x->next
+
+	delete(x)
+}

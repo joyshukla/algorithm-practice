@@ -1,0 +1,97 @@
+Displaying adjacency list of graph 
+| 0 |1,4,
+| 1 |4,2,
+| 2 |2,5,
+| 3 |1,6,
+| 4 |3,
+| 5 |7,
+| 6 |4,
+| 7 |8,
+DFS of Node with id 1
+Adjacent vertex v of node with id 1 is 4 visited 0
+DFS of Node with id 4
+Adjacent vertex v of node with id 4 is 3 visited 0
+DFS of Node with id 3
+Adjacent vertex v of node with id 3 is 6 visited 0
+DFS of Node with id 6
+pop node with id 6 finishing time 4
+DFS of Node with id 3
+pop node with id 3 finishing time 5
+DFS of Node with id 4
+pop node with id 4 finishing time 6
+DFS of Node with id 1
+Adjacent vertex v of node with id 1 is 2 visited 0
+DFS of Node with id 2
+Adjacent vertex v of node with id 2 is 5 visited 0
+DFS of Node with id 5
+Adjacent vertex v of node with id 5 is 7 visited 0
+DFS of Node with id 7
+pop node with id 7 finishing time 10
+DFS of Node with id 5
+pop node with id 5 finishing time 11
+DFS of Node with id 2
+pop node with id 2 finishing time 12
+DFS of Node with id 1
+pop node with id 1 finishing time 13
+Visiting unexplored vertex 0
+DFS of Node with id 0
+pop node with id 0 finishing time 1
+discovery time for vertex with id 0 is 0
+finishing time for vertex with id 0 is 1
+discovery time for vertex with id 1 is 0
+finishing time for vertex with id 1 is 13
+discovery time for vertex with id 2 is 7
+finishing time for vertex with id 2 is 12
+discovery time for vertex with id 3 is 2
+finishing time for vertex with id 3 is 5
+discovery time for vertex with id 4 is 1
+finishing time for vertex with id 4 is 6
+discovery time for vertex with id 5 is 8
+finishing time for vertex with id 5 is 11
+discovery time for vertex with id 6 is 3
+finishing time for vertex with id 6 is 4
+discovery time for vertex with id 7 is 9
+finishing time for vertex with id 7 is 10
+| 0 |1,4,| 1 |4,2,| 2 |2,5,| 3 |1,6,| 4 |3,| 5 |7,| 6 |4,| 7 |8,
+Transpose:
+Displaying adjacency list of graph 
+| 0 |
+| 1 |3,0,
+| 2 |2,1,
+| 3 |4,
+| 4 |6,1,0,
+| 5 |2,
+| 6 |3,
+| 7 |5,
+Finding a SCC for id 0
+----------------------- 
+DFS of Node with id 0
+pop node with id 0 finishing time 1
+Finding a SCC for id 1
+----------------------- 
+DFS of Node with id 1
+Adjacent vertex v of node with id 1 is 3 visited 0
+DFS of Node with id 3
+Adjacent vertex v of node with id 3 is 4 visited 0
+DFS of Node with id 4
+Adjacent vertex v of node with id 4 is 6 visited 0
+DFS of Node with id 6
+pop node with id 6 finishing time 4
+DFS of Node with id 4
+pop node with id 4 finishing time 5
+DFS of Node with id 3
+pop node with id 3 finishing time 6
+DFS of Node with id 1
+pop node with id 1 finishing time 7
+Finding a SCC for id 2
+----------------------- 
+DFS of Node with id 2
+pop node with id 2 finishing time 1
+Finding a SCC for id 5
+----------------------- 
+DFS of Node with id 5
+pop node with id 5 finishing time 1
+Finding a SCC for id 7
+----------------------- 
+DFS of Node with id 7
+pop node with id 7 finishing time 1
